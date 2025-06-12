@@ -70,4 +70,10 @@ export class CalendarComponent {
       this.year === now.getFullYear()
     );
   }
+
+  goToJanuary2025() {
+    this.year = 2025;
+    this.month = 0;
+    this.generateCalendar();
+  }
 } 
