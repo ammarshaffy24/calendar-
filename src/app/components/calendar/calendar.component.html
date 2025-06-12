@@ -1,0 +1,19 @@
+<div class="calendar-container">
+  <img src="assets/tgc.png" alt="TGC Logo" class="tgc-logo">
+  <div class="calendar">
+    <div class="calendar-header">
+      <button (click)="prevMonth()">&lt;</button>
+      <span>{{ year }} - {{ monthName }}</span>
+      <button (click)="nextMonth()">&gt;</button>
+    </div>
+    <div class="calendar-weekdays">
+      <div *ngFor="let day of weekDays" class="calendar-weekday">{{ day }}</div>
+    </div>
+    <div class="calendar-grid">
+      <div *ngFor="let day of blanks" class="calendar-day blank"></div>
+      <div *ngFor="let day of daysInMonth" class="calendar-day" [class.today]="isToday(day)">
+        {{ day }}
+      </div>
+    </div>
+  </div>
+</div> 
