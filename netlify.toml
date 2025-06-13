@@ -1,5 +1,5 @@
 [build]
-  publish = "dist/tgc-calendar-clean"
+  publish = "dist/tgc-calendar-clean/browser"
   command = "ng build --configuration production"
 
 [[redirects]]
