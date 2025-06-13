@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = "dist/tgc-calendar-clean/browser"
+  publish = "dist/tgc-calendar-clean"
 
 [[redirects]]
   from = "/*"
