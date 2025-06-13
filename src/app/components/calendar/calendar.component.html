@@ -11,8 +11,51 @@
     </div>
     <div class="calendar-grid">
       <div *ngFor="let day of blanks" class="calendar-day blank"></div>
-      <div *ngFor="let day of daysInMonth" class="calendar-day" [class.today]="isToday(day)">
+      <div *ngFor="let day of daysInMonth" 
+           class="calendar-day" 
+           [class.today]="isToday(day)"
+           (click)="openEventForm(day)"
+           [class.has-events]="getEventsForDay(day).length > 0">
         {{ day }}
+        <div class="event-indicator" *ngIf="getEventsForDay(day).length > 0">
+          {{ getEventsForDay(day).length }}
+        </div>
+        <div class="event-tooltip" *ngIf="getEventsForDay(day).length > 0">
+          <div *ngFor="let event of getEventsForDay(day)" class="event-item">
+            <h4>{{ event.title }}</h4>
+            <p>{{ event.description }}</p>
+            <button class="delete-btn" (click)="deleteEvent(event.id); $event.stopPropagation()">×</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Form Modal -->
+  <div class="modal" *ngIf="showEventForm">
+    <div class="modal-content">
+      <img src="assets/tgc.png" alt="TGC Logo" class="modal-tgc-logo">
+      <h3>Add Event for {{ selectedDate | date:'mediumDate' }}</h3>
+      <form (ngSubmit)="saveEvent()">
+        <div class="form-group">
+          <label for="title">Title:</label>
+          <input type="text" id="title" [(ngModel)]="newEvent.title" name="title" required>
+        </div>
+        <div class="form-group">
+          <label for="description">Description:</label>
+          <textarea id="description" [(ngModel)]="newEvent.description" name="description"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit">Save</button>
+          <button type="button" (click)="cancelEventForm()">Cancel</button>
+        </div>
+      </form>
+      <div *ngIf="selectedDate && getEventsForDay(selectedDate.getDate()).length > 0" class="scheduled-events-list">
+        <h4>Scheduled Events</h4>
+        <div *ngFor="let event of getEventsForDay(selectedDate.getDate())" class="event-item-modal">
+          <span><b>{{ event.title }}</b>: {{ event.description }}</span>
+          <button class="delete-btn-modal" (click)="deleteEvent(event.id)">Delete</button>
+        </div>
       </div>
     </div>
   </div>

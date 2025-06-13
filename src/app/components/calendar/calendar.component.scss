@@ -11,6 +11,18 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+  
+  button {
+    background: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    
+    &:hover {
+      background: #e0e0e0;
+    }
+  }
 }
 .calendar-weekdays {
   display: grid;
@@ -33,27 +45,243 @@
   padding: 10px 0;
   border-radius: 4px;
   background: #f5f5f5;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #e0e0e0;
+    transform: scale(1.05);
+  }
+  
+  &.blank {
+    background: transparent;
+    box-shadow: none;
+    cursor: default;
+    
+    &:hover {
+      transform: none;
+    }
+  }
+  
+  &.today {
+    background: #ffeb3b;
+    color: #222;
+    font-weight: bold;
+    border: 2px solid #f44336;
+  }
+  
+  &.has-events {
+    background: #e3f2fd;
+    
+    &:hover {
+      background: #bbdefb;
+    }
+  }
 }
-.calendar-day.blank {
-  background: transparent;
-  box-shadow: none;
+.event-indicator {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #2196f3;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.calendar-day.today {
-  background: #ffeb3b;
-  color: #222;
-  font-weight: bold;
-  border: 2px solid #f44336;
-}
+.event-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  padding: 10px;
+  min-width: 200px;
+  z-index: 1000;
+  pointer-events: auto;
 
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+  }
+
+  .calendar-day:hover & {
+    display: block;
+  }
+}
+.event-item {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  position: relative;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  h4 {
+    margin: 0 0 5px 0;
+    color: #2196f3;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+  }
+}
+.delete-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  color: #f44336;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0 5px;
+  
+  &:hover {
+    color: #d32f2f;
+  }
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  
+  h3 {
+    margin-top: 0;
+    color: #2196f3;
+  }
+}
+.form-group {
+  margin-bottom: 15px;
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    
+    &:focus {
+      outline: none;
+      border-color: #2196f3;
+    }
+  }
+  
+  textarea {
+    height: 100px;
+    resize: vertical;
+  }
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  
+  button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    
+    &[type="submit"] {
+      background: #2196f3;
+      color: white;
+      
+      &:hover {
+        background: #1976d2;
+      }
+    }
+    
+    &[type="button"] {
+      background: #f5f5f5;
+      
+      &:hover {
+        background: #e0e0e0;
+      }
+    }
+  }
+}
 .calendar-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
 }
-
 .tgc-logo {
   max-width: 200px;
   height: auto;
   margin-bottom: 20px;
+}
+.modal-tgc-logo {
+  display: block;
+  margin: 0 auto 16px auto;
+  max-width: 180px;
+  height: auto;
+}
+.scheduled-events-list {
+  margin-top: 24px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  padding: 12px;
+}
+.event-item-modal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 15px;
+}
+.event-item-modal:last-child {
+  border-bottom: none;
+}
+.delete-btn-modal {
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+.delete-btn-modal:hover {
+  background: #d32f2f;
 } 
