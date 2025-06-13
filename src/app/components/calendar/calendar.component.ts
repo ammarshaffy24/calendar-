@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { CalendarEvent } from '../../models/event.interface';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
@@ -15,6 +17,15 @@ export class CalendarComponent {
   month: number;
   year: number;
   weekDays: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  events: CalendarEvent[] = [];
+  showEventForm: boolean = false;
+  selectedDate: Date | null = null;
+  newEvent: CalendarEvent = {
+    id: '',
+    date: new Date(),
+    title: '',
+    description: ''
+  };
 
   constructor() {
     this.month = this.today.getMonth();
@@ -75,5 +86,47 @@ export class CalendarComponent {
     this.year = 2025;
     this.month = 0;
     this.generateCalendar();
+  }
+
+  getEventsForDay(day: number): CalendarEvent[] {
+    return this.events.filter(event => {
+      const eventDate = new Date(event.date);
+      return eventDate.getDate() === day &&
+             eventDate.getMonth() === this.month &&
+             eventDate.getFullYear() === this.year;
+    });
+  }
+
+  openEventForm(day: number) {
+    this.selectedDate = new Date(this.year, this.month, day);
+    this.newEvent = {
+      id: crypto.randomUUID(),
+      date: this.selectedDate,
+      title: '',
+      description: ''
+    };
+    this.showEventForm = true;
+  }
+
+  saveEvent() {
+    if (this.newEvent.title.trim()) {
+      this.events.push({...this.newEvent});
+      this.showEventForm = false;
+      this.newEvent = {
+        id: '',
+        date: new Date(),
+        title: '',
+        description: ''
+      };
+    }
+  }
+
+  cancelEventForm() {
+    this.showEventForm = false;
+    this.selectedDate = null;
+  }
+
+  deleteEvent(eventId: string) {
+    this.events = this.events.filter(event => event.id !== eventId);
   }
 } 
