@@ -30,7 +30,22 @@ export class CalendarComponent {
   constructor() {
     this.month = this.today.getMonth();
     this.year = this.today.getFullYear();
+    this.loadEvents();
     this.generateCalendar();
+  }
+
+  loadEvents() {
+    const data = localStorage.getItem('calendarEvents');
+    if (data) {
+      this.events = JSON.parse(data).map((event: any) => ({
+        ...event,
+        date: new Date(event.date)
+      }));
+    }
+  }
+
+  saveEvents() {
+    localStorage.setItem('calendarEvents', JSON.stringify(this.events));
   }
 
   generateCalendar() {
@@ -110,7 +125,8 @@ export class CalendarComponent {
 
   saveEvent() {
     if (this.newEvent.title.trim()) {
-      this.events.push({...this.newEvent});
+      this.events.push({ ...this.newEvent });
+      this.saveEvents();
       this.showEventForm = false;
       this.newEvent = {
         id: '',
@@ -128,5 +144,6 @@ export class CalendarComponent {
 
   deleteEvent(eventId: string) {
     this.events = this.events.filter(event => event.id !== eventId);
+    this.saveEvents();
   }
 } 
